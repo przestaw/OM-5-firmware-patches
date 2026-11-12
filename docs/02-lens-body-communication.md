@@ -32,18 +32,30 @@ across the mount.
 | `C1 00` | `81` (single record), `88` (dual record copy) | Another status form, deliberately left unextended |
 | `81 E3` | `84` (single record), `90` (dual record copy) | Status path with an extra 2-byte OIS tail handled by stock code (`0x6021dd1f`) |
 
-Request formatter `0x60226b9e` and response dispatcher `0x60226edb` feed parser
-`0x6021f6ca`. Parser `0x6021f6ca` and the dispatcher paths read variable
-records, options, LAF/APACT fields (`0x08/0x10/0x20`), and extra status data;
+The request-formatting path includes `0x60226b9e`; the response path at
+`0x60226edb` calls parser `0x6021f6ca`. They handle variable records,
+options, LAF/APACT kind flags (`0x08/0x10/0x20`), and extra status data;
 response length and cursor position cannot be inferred from the request opcode
-alone. In `req[21]`, bit `0x01` requests the optional 2-byte `L_APAring` word
-immediately after `DIS_FCENC`, whereas bit `0x08` requests a 16-byte `IS-extra`
-block (`options & 0x02` in parser flags), giving a minimum valid response length
-of:
+alone. The request's `req[21]` options and the parser's kind flags are distinct:
+
+| Request option mask | Role in the investigated parser contract |
+|---|---|
+| `0x01` | Optional two-byte ring word after `DIS_FCENC` |
+| `0x02` | Separate optional 16-byte block |
+| `0x08` | IS-extra path, excluded from the ring extension; not an alias for `0x02` |
+
+For **ring-extended `C1 80` / `81 E3` replies without `0x08`**, the implemented
+preflight uses the following minimum. `count` is `req[20]`, and `options` is
+`req[21]`:
 
 ```text
-min_rx_bytes = 14 + 2 * max(1, count) + (has_is_extra ? 16 : 0) + (is_81_E3 ? 2 : 0) + (has_ring_word ? 2 : 0)
+min_rx_bytes = 14 + 2 * max(1, count) + ((options & 0x02) ? 16 : 0) + (is_81_E3 ? 2 : 0)
 ```
+
+The base 14 already includes the ring word. With `count = 1`, options `0x01`
+and `C1 80`, the boundary is **16 bytes, not 18**; E3 adds two bytes and
+option `0x02` adds sixteen. This is a scoped ring guard, not a universal length
+formula for every stock response.
 
 The ring experiment adds only a two-byte value on selected forms and never
 combines it with the IS-extra option — a chosen compatibility boundary, not
@@ -80,7 +92,7 @@ images adding asynchronous and high-speed synchronization names.
 GM5 has no IBIS, so it is a clean reference for a Lumix body that relies on lens
 OIS alone. Its factory diagnostics expose OIS, gyro, Hall/reference, zoom, focus,
 and communication labels — leads for lens telemetry and standalone OIS. They are
-not a capture of live traffic during photography, do not fix which values the
+not a capture of live traffic during photography, do not establish which values the
 body reads continuously, and are not a decoded implementation of Dual I.S. No
 cross-brand stabilization protocol follows from diagnostic strings alone.
 

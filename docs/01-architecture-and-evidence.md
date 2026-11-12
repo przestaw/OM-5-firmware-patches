@@ -39,16 +39,16 @@ E-P7, OM-3, OM-5 Mark II, or any other build.
 
 ## Component and section map
 
-The update holds a main application component, UI/resources, a controller
-component (`luke_main`), and one more component. Main is an MN10300/AM33 target
-with uITRON structures. Its ten-section descriptor table sits at decoded offset
+The update holds main (`0x0100`), UI/resources (`0x0101`, `0x0106`), a controller
+component (`0x010e`, `luke_main`), and component `0x0102`. Main is an
+MN10300/AM33 target with uITRON structures. Its ten-section table sits at decoded offset
 `0x6fdc` (CPU `0x60027ffc`); for uncompressed sections, subtracting the analysis
 base turns a CPU address into a decoded file offset.
 
 | Region | Note |
 |---|---|
 | Sections 6 and 7 | `olycompress` LZ4 streams — on-disk bytes are not expanded instructions |
-| Section 1 load ceiling `0x6023e800` | Experiments stay below it without changing the loader |
+| Section 1 load ceiling `0x6023e800` | The ring payload ends below it without changing the loader |
 | File area from `0x60257800` | Holds initialized data, not free space |
 
 Recognizable-looking disassembly of compressed data is not evidence, and padding
@@ -71,11 +71,24 @@ cover selected helpers and blocks, not the full exposure sequence.
 
 ## Method, for anyone continuing
 
-The approach is reproducible in principle without any file from this workspace:
-decode the official container, map the sections, then execute selected stock and
-candidate paths in a strict CPU emulator that faults on unknown instructions and
-unmapped memory, comparing stock against modified behavior and stopping at
-explicit boundaries. What a continuation needs is a verified toolchain, declared
-fixtures, provenance for every input, and evidence tied to the exact candidate
-examined. These notes point to those concepts; they do not provide or run such
-an environment.
+The landmarks and example expectations support an independent investigation:
+identify the matching official container, map its sections, then compare selected
+stock and candidate paths in a strict CPU emulator with explicit memory regions
+and stop points. A candidate must be independently implemented or separately
+obtained; it cannot be reconstructed exactly from these notes alone.
+
+| Research goal | What these notes supply | What the next researcher still needs |
+|---|---|---|
+| Check a static finding | Input hashes, addresses, fields, and section boundaries | Lawfully obtained inputs, a decoder/disassembler, and a verified address map |
+| Check a representative CPU result | Example inputs, expected outputs, and scope limits in the relevant chapter | A harness with the required registers, stack, memory and declared service fixtures |
+| Repeat the exact historical totals or binary | Reported totals and upstream reference revisions | The original candidate sources, complete fixture matrix, engine build and retained evidence; these are not distributed here |
+| Establish camera behavior | Explicitly identified gaps | Separate hardware validation; no result here substitutes for it |
+
+The recorded GNU engine SHA-256 is
+`e3a3b4a2dd7b7827a64221eac8cada53c9f341a66ce66399cdf2a156db62f703`.
+Its source revision was `87ffb882e0f4d73401a0746177ffabb8e8bbe4ac`.
+The original build helper rejected the downloaded archive's checksum; the
+research used a separately recorded source-verification route. These identifiers
+are provenance, not a promise that an ordinary upstream build reproduces the
+same binary. An independent run should record its own toolchain and engine
+identity rather than bypass a failed checksum check.

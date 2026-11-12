@@ -16,7 +16,7 @@ The regimes that must stay distinct:
 
 | Regime | What happens |
 |---|---|
-| Body IBIS only (lens OIS off) | Sensor stage handles stabilization; the lens optical group is parked |
+| Body IBIS only (lens OIS off) | Sensor stage handles stabilization; lens OIS is inactive (its parking behavior is not established here) |
 | Lens OIS only | Body stabilization is not used |
 | Coordinated (OM Sync IS / Panasonic Dual I.S.) | Lens and body share correction through a supported protocol |
 | Orthogonal split | Separate dimensions are assigned to otherwise independent systems |
@@ -55,25 +55,36 @@ classification difference, not a demonstrated hybrid capability.
 | Boundary | What is known | What is missing |
 |---|---|---|
 | Exposure selection | `0x6206cf74` comes from `original_request + 4`; the byte `0x6206cf86` from `original_request + 31`; the exposure branch selects on the former | Its final producer and real values during exposure; it must not be relabeled an IS type or menu value |
-| Controller interpretation | Header, vector, and startup fix CPU0's mapping in `010e` | CPU1's mapping, the mask receiver, bit meaning, and actuator effect; mask `4` as a roll restriction stays a hypothesis |
+| Controller interpretation | Header, vector, and startup support CPU0's mapping in `010e` | CPU1's mapping, the mask receiver, bit meaning, and actuator effect; mask `4` as a roll restriction stays a hypothesis |
+
+Useful independent checks are below. Inputs are synthetic states, not measured
+lens support. The mask helper takes `d0 = mode`, `d1 = restricted`, and reads
+the byte at `0x6206b0fe`; the mode numbers are internal test inputs.
+
+| Check | Input | Expected bounded result |
+|---|---|---|
+| Version predicate | `0x0b0a` / `0x121a` / `0x0100` | `0` / `1` / `0` |
+| OIS classification | Ready descriptor, maker `0` / `2` / `3`, OIS flag at `descriptor + 0x24d8` set | Class `1` / `2` / `2`; clearing OIS gives `0` |
+| Restricted mask | Mode `2`, `3` or `4`; restricted `1`; flag `0` or `1` | `4` in all six cases |
+| Unrestricted mask | Modes `2`, `3`, `4`; restricted `0` | Flag `0`: `13`, `22`, `31`; flag `1`: `5`, `6`, `7` |
 
 ## Lumix generations and available material
 
-| Family | Panasonic tier | Material available here |
+| Family | Panasonic tier | Material available to the research |
 |---|---|---|
-| GH2, G3, GX1 (pre-2013) | No IBIS | Legacy scattered key-in-file scheme (`PTool`); no IBIS code |
+| GH2, G3, GX1 (pre-2013) | No IBIS | Legacy PTool material describes file-specific scattered-key layouts; not an IBIS implementation reference |
 | GM1 / GM5 | No IBIS | 5-round AES-128-CBC with public RAM keys; GM5 decoded locally as a lens-OIS reference |
-| GX7 | 2-axis stills IBIS (no Dual I.S.) | First Lumix IBIS body; 5-round AES-128-CBC with runtime RAM key, no public key |
-| GX8 | Dual I.S. | Container research; 5-round AES-128-CBC with runtime RAM key, no verified IBIS plaintext used |
-| GX80 / GX85, GX9 | Dual I.S. (not Dual I.S. 2) | Vendor compatibility material and external research; for GX9 (`GX7MK3`) only the RAM key's SHA-256 digest (`527bb069…`) is public, not key bytes or plaintext |
+| GX7 | Early stills IBIS (no Dual I.S.) | Historical body reference; its cipher and key availability were not independently established in this research |
+| GX8 | Dual I.S. | Container research; no verified IBIS plaintext used, so encryption details are not inferred from the marketing tier |
+| GX80 / GX85, GX9 | Dual I.S. (not Dual I.S. 2) | Vendor compatibility material; the inspected GX9 (`GX7MK3`) research reports decryption with five-round AES-CBC and publishes a key fingerprint (`527bb069…`), while retaining key bytes and plaintext locally |
 | G80 / G81 / G85, GH5, G9 | Dual I.S. 2 | Vendor matrix and container headers (`eep_act_a/b` on GH5); no verified coordination code used |
 | Later bodies | Model/firmware dependent | Not evidence of one algorithm or protocol across generations |
 
 G80/G85 and GX80/GX85 are different families, and five-axis IBIS does not imply
-Dual I.S. 2. Panasonic switched from key-in-file updates to per-model runtime
-RAM keys (`5-round AES-128-CBC`) around 2013 — before Dual I.S. or Dual I.S. 2
-existed — which is why public keys exist only for no-IBIS GM1/GM5 rather than
-for any IBIS generation. Vendor tables list combinations and firmware
+Dual I.S. 2. The legacy PTool material and the later GM1/GM5/GX9 research concern
+different update formats and acquisition methods. They do not establish a
+universal transition date, the cipher used by every model, or the worldwide
+availability of keys. Vendor tables list combinations and firmware
 requirements, not a packet specification. Update-file encryption is also a
 separate question from any encryption of traffic across the mount; this
 workspace has no usable plaintext for a Lumix IBIS body and makes no claim about

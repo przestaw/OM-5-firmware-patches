@@ -4,15 +4,13 @@
 
 Research cut-off: **12 November 2026**.
 
-This bibliography identifies prior work, useful project entry points, vendor
-documentation, and community venues. It is not a dependency manifest or a
-download/build procedure. No linked project's firmware, tools, images, or
-resources are included in this repository.
+Starting points for anyone continuing the work: projects, vendor material,
+and discussions. Follow the relevant topic, then check the revision and what
+was actually tested. This is not a dependency list or a build guide, and none
+of the linked code, firmware or resources is bundled here.
 
-The descriptions summarize the research record used when preparing these
-notes. External pages were not comprehensively revalidated during the
-creation of this documentation-only repository. Repository heads, releases,
-licenses, and support claims can change.
+The snapshots below describe the original research inputs, not current upstream
+heads. External pages and support claims have not all been revalidated.
 
 ## Firmware analysis and emulation
 
@@ -22,10 +20,9 @@ licenses, and support claims can change.
 | [flatpanda/om-emu](https://github.com/flatpanda/om-emu) | MN103/AM33 instruction models, camera ports, GUI research, and emulator limitations | Modeled peripherals and a working UI do not prove physical camera behavior |
 | [cmdada/em10-fw](https://github.com/cmdada/em10-fw) | Independent research into older Olympus firmware and subsystem organization | An earlier body's offsets and architecture are not an OM-5 port |
 
-For the [architecture chapter](01-architecture-and-evidence.md), look for
-container formats, loader descriptors, compressed sections, memory maps,
-instruction-set coverage, provenance, and explicit emulator boundaries.
-Finding a tool is not enough: its revision and declared assumptions matter.
+For [architecture](01-architecture-and-evidence.md), useful search terms are
+OE containers, section descriptors, `olycompress`, AM33, strict simulation
+and memory maps. Check the emulator's coverage and declared service models.
 
 ## Aperture-ring prior work and hardware reports
 
@@ -35,9 +32,9 @@ Finding a tool is not enough: its revision and declared assumptions matter.
 | [azqeurio/om-c-firmware](https://github.com/azqeurio/om-c-firmware) and [release history](https://github.com/azqeurio/om-c-firmware/releases) | Independent multi-body firmware-modification project used as comparative material | Reading a distributed application's code does not establish a license to redistribute its payloads |
 | [azqeurio/om-c-firmware#9](https://github.com/azqeurio/om-c-firmware/issues/9) | OM-5 user report mentioning functioning ring recognition and a reboot associated with a different feature in the tested third-party builds | A user report does not identify or validate our own experimental binary |
 
-For the [aperture-ring chapter](04-aperture-ring.md), investigate optional
-status requests, official aperture bounds, mode restrictions, session resets,
-and which exact camera/lens/firmware combination was tested.
+For the [ring](04-aperture-ring.md), look for optional status words, official
+Av bounds, mode restrictions and session resets. Match hardware reports to
+the exact camera, lens and firmware.
 
 ## COLOR and Caduceus
 
@@ -47,13 +44,11 @@ and which exact camera/lens/firmware combination was tested.
 | [androidfanman/caduceus-om3](https://github.com/androidfanman/caduceus-om3) | Development of the concept on another OM body; useful structural and preset references |
 | [Caduceus Control Panel](https://cakelesscoder.github.io/caduceus-ep7/) | An ecosystem reference for look editing and interchange, not an interface implemented by our prototype |
 
-The planned OM-5 work explicitly credits Caduceus as groundwork.
-This publication is independent and does not imply participation, support,
-or endorsement by the Caduceus authors.
+Caduceus is groundwork for the planned OM-5 work. This independent experiment
+does not imply participation or endorsement by its authors.
 
-For the [COLOR chapter](06-caduceus-color.md), look for sector ordering,
-picture-mode selection, job layouts, native table builders, recipe semantics,
-and the distinction between parameter generation and rendered output.
+For [COLOR](06-caduceus-color.md), look for sector ordering, selectors, job
+layouts, native builders and recipes. Parameter output is not rendered output.
 
 ## Lumix and stabilization research
 
@@ -73,13 +68,14 @@ separate question about communication over the mount.
 |---|---|---|
 | [Interchangeable lens for Micro Four Thirds: Dual I.S. / Dual I.S.2](https://av.jpn.support.panasonic.com/support//global/cs/dsc/connect/dual_is.html) | Distinguishes the GX8/GX80/GX85/GX9 group from bodies with Dual I.S. 2 compatibility entries (including G80/G81/G85, GH5, and G9) along with lens firmware requirements | Compatibility claim, not a specification of internal message formats |
 | [LUMIX 5-axis Dual I.S. delivers powerful image stability](https://blogs.panasonic.com.au/consumer/lumix-5-axis-dual-s-delivers-powerful-image-stability/) | GX85 material explaining five-axis body stabilization working with two-axis lens stabilization | Helps distinguish axis count from the Dual I.S. 2 name |
+| [The Lumix DMC-GX7 is turning heads](https://blogs.panasonic.com.au/consumer/the-lumix-dmc-gx7-is-turning-heads/) | Panasonic's 2013 introduction of the GX7 and its in-body stabilizer | Does not establish its firmware cipher or key availability |
 | [PEN E-P7](https://explore.omsystem.com/c/en/e-p7) | Identifies the E-P7 model and its color-profile and stabilization features | Not evidence that the proposed FLOW-style rotation effect exists or that Panasonic OIS interoperates with OM body correction |
 
 ## Reference snapshots
 
-The original research record identifies these revisions. They are provenance
-markers, not a statement that these are the latest versions or a promise of
-reproducibility from this Markdown repository.
+These are the recorded research snapshots, not necessarily the latest revisions.
+They identify upstream context; they do not include our undistributed candidate and
+complete test fixtures.
 
 | Reference | Revision |
 |---|---|
@@ -93,10 +89,9 @@ reproducibility from this Markdown repository.
 | E-M10 research | `6adb3bef36239859ae3fcd94b0dbb7db6de6ffa1` |
 | om-c comparative release | `dbv0.4.0`; its repository and release application are distinct sources |
 
-For the [stacking blocker](05-focus-stacking.md#the-simulator-blocker),
-OM-Emu's documentation of the exact `udf14` form is a specific place to look.
-An alternative model still requires independent verification before it can
-support a new qualification claim.
+For the [stacking blocker](05-focus-stacking.md#the-simulator-blocker), search
+OM-Emu for `udf14`, integer-to-float conversion and rounding tests. A documented
+model still needs validation against the exact operation used by OM-5.
 
 ## Forums and community venues
 
@@ -110,34 +105,25 @@ for this publication's experiments:
 | [Personal View](https://www.personal-view.com/talks/) | Historical Panasonic research and PTool discussions | Older results should not be assumed to apply to later cameras |
 | [fishcu issue tracker](https://github.com/fishcu/oly_fw_analysis/issues), [Caduceus E-P7 issue tracker](https://github.com/cakelesscoder/caduceus-ep7/issues), [om-c issue tracker](https://github.com/azqeurio/om-c-firmware/issues) | Project-specific reports, corrections, and stated test boundaries | Check binary identity if available before comparing behavior |
 
-When assessing a report, identify its date, exact camera and lens firmware,
-binary identity if available, test conditions, and whether it is first-hand.
-No discussion posts, project comments, or requests to contributors were
-published while preparing this repository.
+Record the date, camera/lens firmware, binary identity if available, test
+conditions and whether a report is first-hand. The publication does not
+represent contact with, or approval from, the listed contributors.
 
 ## Attribution and source rights
 
-The analysis acknowledges the above authors' work rather than treating linked
-projects as interchangeable dependencies. In the inspected fishcu snapshot,
+Credit belongs to the named authors. In the inspected fishcu snapshot,
 original contributions and GNU-based simulator components have different
-licenses, and vendor firmware is excluded from those grants.
-Other projects and unmerged contributions retain their own terms.
-
-Neither a readable source file nor a public release automatically grants
-permission to republish third-party material. This bibliography links to
-sources instead of distributing their code or firmware.
+licenses; neither grant covers vendor firmware. Other projects and unmerged
+contributions retain their own terms. Readable source and public availability
+do not by themselves grant redistribution rights.
 
 ## EU copyright framework
 
-- [Directive 2009/24/EC: legal protection of computer programs](https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009L0024):
-  Article 5(3) on observation, study and testing by an entitled user, and
-  Article 6 on decompilation indispensable for interoperability and limits
-  on use and disclosure of the resulting information.
-- [Directive 2001/29/EC: consolidated text](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A02001L0029-20190606):
-  Article 5(3)(d) on quotation for purposes such as criticism or review,
-  and Article 5(5) on limits to exceptions.
+| Reference | Relevance |
+|---|---|
+| [Directive 2009/24/EC](https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32009L0024), Articles 5(3) and 6 | Study/testing by an entitled user; decompilation indispensable for interoperability, with limits on use and disclosure |
+| [Directive 2001/29/EC](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A02001L0029-20190606), Articles 5(3)(d) and 5(5) | Quotation for criticism/review and limits on exceptions |
 
-These EU references must be considered with the applicable Member State's
-implementing legislation and the actual circumstances. The
-[disclaimer](disclaimer.md) explains why they are not a blanket authorization
-for firmware copying, decompilation, publication or circumvention.
+These are conditional rules under applicable national law; see the
+[short research notice](disclaimer.md), not a general permission to copy,
+decompile, publish or circumvent.

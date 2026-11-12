@@ -27,7 +27,7 @@ was tested. None was tested physically with this independently written module.
 Only `C1 80` and `81 E3` are extended; `C1 00` is not, and requests carrying the
 IS-extra option (`0x08`) are left outside ring extension. The parser checks the
 required response length before consuming the extended reply, allows additional
-trailing bytes, and returns stock truncation status `0x6507` on short replies
+trailing bytes, and rejects short extended replies with `0x6507`
 (while connection loss preserves `0x6407`). The dispatcher tests stop before the
 stock buffer-release service (`0x602273d3`) — so they do not cover the full task
 lifecycle.
@@ -64,8 +64,9 @@ Identity reception and transport errors invalidate cached ring state. Because th
 six-byte identity is not shown to be a per-unit serial, session resets remain
 necessary even for same-model lens changes. The experiment is seven change
 regions and a 1,304-byte payload (including unused test entry points) at
-`0x6023e200`–`0x6023e718`, below the stock-loaded boundary and needing no loader
-edit. Its 16-byte cache sits at `0xa25988ac` (inside the alignment pad below primary
+`[0x6023e200, 0x6023e718)` (exclusive end), below the stock-loaded boundary
+and needing no loader edit. Its 16-byte cache sits at `0xa25988ac`
+(inside the alignment pad below primary
 descriptor `*0xa26824e0 == 0xa25988c0`, storing a `"RING"` tag, 6-byte `L_ID`
 copy, `u16` raw value at `0xa25988b6`, and `u32` validity flag at `0xa25988b8`);
 the placement fits the layout, but exclusive runtime ownership against unknown
@@ -80,7 +81,14 @@ interrupt/DMA writers is unproven.
 | Dispatcher blocks, native getters, official bounds, request formatting | EXIF, boot, recovery, scheduling, concurrency |
 | Both outcomes of all 54 core conditional branches | Full firmware branch coverage; a combined ring/stacking/COLOR image |
 
-Property-storage lookup and timing boundaries use explicit fixtures.
+Property-storage lookup (`0x6005d9de`, `0x602f17a0`) and the timer counter
+(`0x9890014c`) use explicit fixtures. For a representative comparison, use a
+ready/connected native-MFT descriptor, matching six-byte identity and capability,
+then compare stock without the extra word against the candidate with it.
+The descriptor/global outputs should agree, apart from the candidate's ring
+cache; changing the response length below the scoped minimum must give
+`0x6507` and invalidate that cache. Native mode and bounds tests need their own
+declared property fixtures, not getters replaced with unconditional success.
 
 ## Investigate next
 

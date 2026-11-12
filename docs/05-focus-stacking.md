@@ -55,14 +55,21 @@ The change delegates stacking eligibility to the stock bracketing gate and
 rejoins the existing path. It does not spoof maker identity, create RAM state,
 or add a code cave. The policy differences are the point:
 
-| Compared to original stacking | Effect of delegation |
+| Case or scope | Effect of delegation |
 |---|---|
-| Panasonic-only exception | Not restricted to Panasonic; other admitted MFT AF fixtures also pass |
+| Ordinary MFT AF fixture without `mag_cng` | Not restricted to Panasonic; tested Panasonic, Sigma and OM fixtures change from stock `0` to candidate `1` |
 | Invalid `mag_cng = 2` | Can be admitted |
 | Valid-table flag plus a bracketing exclusion | Can be rejected even where the original gate accepts it |
 
 Delegation is therefore not a strict superset of original behavior; no claim
 that it preserves every stock exclusion is justified.
+
+In the representative gate fixtures, readiness is `1`, protocol version is
+`0x121a`, the MF clutch is clear, and the bracketing-exclusion byte
+(`descriptor + 0x1bc81`) is clear unless that exclusion is being tested.
+No-lens, unready, MF-clutch, Four Thirds and excluded-lens cases must also be
+checked. These state descriptions guide independent tests; they do not replace
+the original 17-fixture matrix and calling-context setup.
 
 ## The simulator blocker
 
@@ -72,7 +79,14 @@ operation and stops. An independent emulator documents this exact form as an
 int32-to-float32 conversion (round-to-nearest-even) — a useful model to verify,
 not proof that the operation ran in this test path. The historical result is 69
 runs, 10 unittest methods with no assertion failures, and a negative overall
-qualification with one explicit blocker. No patch manifest was issued.
+qualification with one explicit blocker. A proposal was retained, but no
+successful patch manifest was issued.
+
+The populated-table check used a 274-byte, 2-by-2 synthetic table: focus `150`
+between `100/200`, zoom `50` between `0/100`, and node values `10/20/30/40`
+(or `-40/-30/-20/-10`). The observed register value before `udf14` was
+`+3200` (or `-3200`). The eventual interpolator return of `+25.0` / `-25.0`
+remained an expectation, not an executed result.
 
 ## Investigate next
 

@@ -28,7 +28,7 @@ target camera's controls need not expose the same internal options.
 
 | Detail | Why it matters |
 |---|---|
-| Capture-job allocation is 15,484 bytes (E-P7: 15,488) | A four-byte difference invalidates blindly copied offsets |
+| Capture-job allocation at `0x60384b11` is 15,484 bytes (E-P7: 15,488) | A four-byte difference requires rechecking offsets; this is a static finding, not full job execution |
 | Sector mapping is `w(r) = 2*(r mod 6) + floor(r/6)` | Non-linear; wheel index 1 maps to record 6 in the tested example |
 
 These are porting constraints, not evidence that all recipe formats or picture
@@ -47,7 +47,7 @@ recipe.
 
 | The 93 cases include | They stop short of |
 |---|---|
-| Neutral and single-sector output | The whole capture lifecycle (they end before `0x603e1192`) |
+| Neutral and single-sector output | The whole capture lifecycle (the integrated slice ends before `0x603e1192`) |
 | Host/non-host behavior, bypass, external profiles | Remaining LUT submission and real ISP pixels |
 | Synthetic cold/warm cache states and dirty bits | A hardware cache-coherence proof |
 | One integrated pipeline slice | Runtime ownership, DMA, scheduling, boot/recovery, LV/JPEG/ORF output |
@@ -55,6 +55,14 @@ recipe.
 A key distinction: here, **neutral native COLOR is not unchanged stock Color
 Creator** — the prototype replaces ordinary host behavior even in its neutral
 variant, and future UX and testing must keep that explicit.
+
+For an independent spot-check, start with neutral sectors and change wheel
+sector `1` to input saturation `+1`, native hue `-1000` and lightness `25`.
+In the tested recipe, record `6` starts at `output + 832`; its H/S/L fields
+at `+850/+852/+854` become `-1000/45/25`. The selector's dirty bit is
+`context + 108`, mask `0x02`. Non-host, bypass and external-profile paths
+must be compared against stock separately. These values are parameters and
+expected buffer results, not a calibrated film look or a patch payload.
 
 ## Development direction
 
