@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # Caduceus-Style COLOR Research
 
 [← Focus stacking](05-focus-stacking.md) · [Overview](index.md) ·

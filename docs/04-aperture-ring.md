@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # Electronic Aperture Ring
 
 [← Stabilization](03-ibis-and-ois.md) · [Overview](index.md) ·

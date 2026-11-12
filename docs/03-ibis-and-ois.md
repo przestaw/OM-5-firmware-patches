@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # IBIS and OIS Stabilization
 
 [← Lens communication](02-lens-body-communication.md) · [Overview](index.md) ·

@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # Research Notice (EU)
 
 [Overview](index.md) | [Sources and references](sources-and-references.md)

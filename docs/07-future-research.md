@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # Future Research
 
 [← Caduceus-style COLOR](06-caduceus-color.md) · [Overview](index.md)

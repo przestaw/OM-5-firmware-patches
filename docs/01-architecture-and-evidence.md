@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # Architecture and Evidence
 
 [Overview](index.md) · [Next: Lens-body communication →](02-lens-body-communication.md)

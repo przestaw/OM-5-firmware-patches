@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # OM-5 Firmware Research
 
 Research snapshot: **12 November 2026**. Target: **OM SYSTEM OM-5 Mark I,
