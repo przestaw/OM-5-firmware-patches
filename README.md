@@ -5,6 +5,9 @@ communication, image stabilization, and experimental firmware modifications.
 
 **Start with the [research overview](docs/index.md).**
 
+[Sources and references](docs/sources-and-references.md) ·
+[Research notice (EU)](docs/disclaimer.md)
+
 This is a documentation publication, not a patch distribution. It contains
 Markdown commentary only — no firmware, tools, patch payloads, replacement
 byte sequences, cryptographic keys, build scripts, or installation steps.

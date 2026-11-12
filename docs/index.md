@@ -38,6 +38,9 @@ to rerun them.
 | 6 | [Caduceus-style COLOR](06-caduceus-color.md) | The native 12-sector engine, porting pitfalls, and the bounded prototype |
 | 7 | [Future research](07-future-research.md) | Sensor rotation and hybrid OIS proposals, and the evidence each still needs |
 
+Reference: [Sources and references](sources-and-references.md) ·
+[Research notice (EU)](disclaimer.md).
+
 ## Scope
 
 This repository holds research summaries and directions for further reading.
