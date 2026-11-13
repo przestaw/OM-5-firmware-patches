@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # Sources and References
 
 [Overview](index.md) · [Research notice (EU)](disclaimer.md)

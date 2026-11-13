@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # Focus Stacking
 
 [← Aperture ring](04-aperture-ring.md) · [Overview](index.md) ·
